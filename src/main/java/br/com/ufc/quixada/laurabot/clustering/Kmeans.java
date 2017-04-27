@@ -16,8 +16,8 @@ public class Kmeans {
 	}
 
 	public void init() {
-		initClusters();
-		setRandomCentroids();
+		this.initClusters();
+		this.setRandomCentroids();
 	}
 
 	private void initClusters() {
@@ -54,6 +54,7 @@ public class Kmeans {
 		for (Cluster cluster : this.clusters) {
 			Question aux = cluster.getCentroid();
 			Question question = new Question(aux.getTitle(), aux.getId());
+			question.setClusterId(aux.getClusterId());
 			centroids.add(question);
 		}
 		return centroids;
@@ -74,8 +75,8 @@ public class Kmeans {
 					clusterId = centroids.get(j).getClusterId();
 				}
 			}
-			questions.get(i).setClusterId(clusterId);
-			getClusterById(clusterId).addQuestion(questions.get(i));
+			this.questions.get(i).setClusterId(clusterId);
+			getClusterById(clusterId).addQuestion(this.questions.get(i));
 			clusterId = -1;
 			min = max;
 		}
@@ -94,7 +95,7 @@ public class Kmeans {
 				double sumDistance = 0;
 				for (int k = 0; k < questions.size(); k++) {
 					if (!questions.get(j).equals(questions.get(k))) {
-						sumDistance =+ levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+						sumDistance = +levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
 					}
 				}
 				mean = sumDistance / (questions.size() - 1);
@@ -143,5 +144,16 @@ public class Kmeans {
 			}
 		}
 		return null;
+	}
+
+	public void calculate() {
+		int i = 1;
+		while (i < 600) {
+			this.assignCluster();
+			this.plotClusters();
+			this.calculateCentroids();
+			this.clearClusters();
+			i++;
+		}
 	}
 }
