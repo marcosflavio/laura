@@ -1,8 +1,8 @@
 package br.com.ufc.quixada.laurabot.clustering;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Kmeans {
 	private int numClusters;
@@ -28,11 +28,15 @@ public class Kmeans {
 	}
 
 	private void setRandomCentroids() {
-		for (int i = 0; i < this.numClusters; i++) {
-			int c = new Random().nextInt(questions.size());
-			Question centroid = questions.get(c);
-			centroid.setClusterId(i);
-			clusters.get(i).setCentroid(centroid);
+		List<Integer> possibleCentroids = new ArrayList<>();
+		for (int i = 0; i < this.questions.size(); i++) {
+			possibleCentroids.add(i);
+		}
+		Collections.shuffle(possibleCentroids);
+		for (int j = 0; j < this.numClusters; j++) {
+			Question centroid = questions.get(possibleCentroids.get(j));
+			centroid.setClusterId(j);
+			clusters.get(j).setCentroid(centroid);
 		}
 	}
 
@@ -110,11 +114,14 @@ public class Kmeans {
 		return centroids;
 	}
 
-	public void calculateCentroidsPercentVariation() {
-		/**
-		 * TODO get old and new centroids, what's the percent ratio change
-		 * between them?
-		 */
+	public Double calculateCentroidsPercentVariation(List<Question> oldCentroids, List<Question> newCentroids) {
+		double distance = 0.0;
+		LevenshteinDistance levenshtein = new LevenshteinDistance();
+		for (int i = 0; i < oldCentroids.size(); i++) {
+			distance = +levenshtein.calculateDistance(oldCentroids.get(i), newCentroids.get(i));
+		}
+		double mean = (distance / oldCentroids.size());
+		return mean;
 	}
 
 	public int getNumClusters() {
@@ -148,10 +155,15 @@ public class Kmeans {
 
 	public void calculate() {
 		int i = 1;
-		while (i < 600) {
+		// List<Question> newCentroids;
+		// List<Question> oldCentroids;
+		while (i < 5) {
 			this.assignCluster();
+			// oldCentroids = getCentroids();
 			this.plotClusters();
-			this.calculateCentroids();
+			// newCentroids = this.calculateCentroids();
+			// this.calculateCentroidsPercentVariation(oldCentroids,
+			// newCentroids);
 			this.clearClusters();
 			i++;
 		}
