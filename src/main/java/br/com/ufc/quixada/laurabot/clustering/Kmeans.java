@@ -85,7 +85,8 @@ public class Kmeans {
 			min = max;
 		}
 	}
-
+	
+	//Review this method
 	public List<Question> calculateCentroids() {
 		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
