@@ -1,5 +1,10 @@
 package br.com.ufc.quixada.laurabot.repository;
 
-public interface IUsersRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import br.com.ufc.quixada.laurabot.model.UsersEntity;
+
+public interface IUsersRepository extends JpaRepository<UsersEntity, Integer>{
+	
+	
 }

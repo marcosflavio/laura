@@ -10,126 +10,130 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Posts")
 public class PostsEntity {
-	
+
 	@Id
 	@Column(name = "Id")
-	private int id;
-	
-	@Column(name = "AcceptedAnswerId")
-	private int postTypeId;
-	
+	private Long Id;
+
 	@Column(name = "PostTypeId")
-	private int acceptedAnswerId;
-	
+	private Long PostTypeId;
+
+	@Column(name = "AcceptedAnswerId")
+	private Long AcceptedAnswerId;
+
 	@Column(name = "CreationDate")
-	private Date creadionDate;
-	
+	private Date CreationDate;
+
 	@Column(name = "ParentId")
-	private int parentId;
-	
+	private Long ParentId;
+
 	@Column(name = "Score")
-	private int score;
-	
+	private Long Score;
+
 	@Column(name = "Body")
-	private String body;
-	
+	private String Body;
+
 	@Column(name = "OwnerUserId")
-	private int ownerUserId;
-	
+	private Long OwnerUserId;
+
 	@Column(name = "Title")
-	private String title;
-	
+	private String Title;
+
 	@Column(name = "FavoriteCount")
-	private int favoriteCount;
-	
+	private Long FavoriteCount;
+
 	@Column(name = "Tags")
-	private String tags;
-	
-	public PostsEntity () {
-		
+	private String Tags;
+
+	public PostsEntity() {
+
 	}
 
-	public int getPostTypeId() {
-		return postTypeId;
+	public Long getId() {
+		return Id;
 	}
 
-	public void setPostTypeId(int postTypeId) {
-		this.postTypeId = postTypeId;
+	public void setId(Long id) {
+		Id = id;
 	}
 
-	public int getAcceptedAnswerId() {
-		return acceptedAnswerId;
+	public Long getPostTypeId() {
+		return PostTypeId;
 	}
 
-	public void setAcceptedAnswerId(int acceptedAnswerId) {
-		this.acceptedAnswerId = acceptedAnswerId;
+	public void setPostTypeId(Long postTypeId) {
+		PostTypeId = postTypeId;
 	}
 
-	public Date getCreadionDate() {
-		return creadionDate;
+	public Long getAcceptedAnswerId() {
+		return AcceptedAnswerId;
 	}
 
-	public void setCreadionDate(Date creadionDate) {
-		this.creadionDate = creadionDate;
+	public void setAcceptedAnswerId(Long acceptedAnswerId) {
+		AcceptedAnswerId = acceptedAnswerId;
 	}
 
-	public int getParentId() {
-		return parentId;
+	public Date getCreationDate() {
+		return CreationDate;
 	}
 
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
+	public void setCreationDate(Date creationDate) {
+		CreationDate = creationDate;
 	}
 
-	public int getScore() {
-		return score;
+	public Long getParentId() {
+		return ParentId;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
+	public void setParentId(Long parentId) {
+		ParentId = parentId;
+	}
+
+	public Long getScore() {
+		return Score;
+	}
+
+	public void setScore(Long score) {
+		Score = score;
 	}
 
 	public String getBody() {
-		return body;
+		return Body;
 	}
 
 	public void setBody(String body) {
-		this.body = body;
+		Body = body;
 	}
 
-	public int getOwnerUserId() {
-		return ownerUserId;
+	public Long getOwnerUserId() {
+		return OwnerUserId;
 	}
 
-	public void setOwnerUserId(int ownerUserId) {
-		this.ownerUserId = ownerUserId;
+	public void setOwnerUserId(Long ownerUserId) {
+		OwnerUserId = ownerUserId;
 	}
 
 	public String getTitle() {
-		return title;
+		return Title;
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		Title = title;
 	}
 
-	public int getFavoriteCount() {
-		return favoriteCount;
+	public Long getFavoriteCount() {
+		return FavoriteCount;
 	}
 
-	public void setFavoriteCount(int favoriteCount) {
-		this.favoriteCount = favoriteCount;
+	public void setFavoriteCount(Long favoriteCount) {
+		FavoriteCount = favoriteCount;
 	}
 
 	public String getTags() {
-		return tags;
+		return Tags;
 	}
 
 	public void setTags(String tags) {
-		this.tags = tags;
-	}
-
-	public int getId() {
-		return id;
+		Tags = tags;
 	}
 }
