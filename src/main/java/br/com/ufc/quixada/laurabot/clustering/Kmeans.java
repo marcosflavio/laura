@@ -16,6 +16,7 @@ public class Kmeans {
 	}
 
 	public void init() {
+		System.err.println("Iniciei o kmeans");
 		this.initClusters();
 		this.setRandomCentroids();
 	}
@@ -26,7 +27,8 @@ public class Kmeans {
 			this.clusters.add(cluster);
 		}
 	}
-
+	
+	//TODO Remove centroids from the main list
 	private void setRandomCentroids() {
 		List<Integer> possibleCentroids = new ArrayList<>();
 		for (int i = 0; i < this.questions.size(); i++) {
@@ -43,7 +45,8 @@ public class Kmeans {
 	public void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
-			cl.plotCluster();
+			System.out.println(cl.getCentroid());
+			//cl.plotCluster();
 		}
 	}
 
@@ -86,7 +89,7 @@ public class Kmeans {
 		}
 	}
 	
-	//Review this method
+	//TODO Remove centroids from the main list
 	public List<Question> calculateCentroids() {
 		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
@@ -105,6 +108,7 @@ public class Kmeans {
 				}
 				mean = sumDistance / (questions.size() - 1);
 				if (mean < dist) {
+					dist = mean;
 					clusters.get(i).setCentroid(questions.get(j));
 				}
 			}
@@ -156,16 +160,18 @@ public class Kmeans {
 
 	public void calculate() {
 		int i = 1;
-		// List<Question> newCentroids;
-		// List<Question> oldCentroids;
-		while (i < 5) {
+		System.err.println("Comecei a calcular..");
+		while (i < this.getNumClusters()) {
 			this.assignCluster();
 			// oldCentroids = getCentroids();
+			System.err.println("Inicio da " + i + " iteração");
 			this.plotClusters();
 			// newCentroids = this.calculateCentroids();
 			// this.calculateCentroidsPercentVariation(oldCentroids,
 			// newCentroids);
+			System.err.println("Fim da " + i + " iteração");
 			this.clearClusters();
+			calculateCentroids();
 			i++;
 		}
 	}

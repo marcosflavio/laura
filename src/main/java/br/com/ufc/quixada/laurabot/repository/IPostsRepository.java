@@ -11,5 +11,5 @@ import br.com.ufc.quixada.laurabot.model.PostsEntity;
 public interface IPostsRepository extends JpaRepository<PostsEntity, Long>{
 	
 	@Query("SELECT p FROM PostsEntity p WHERE p.PostTypeId=:type")
-	public List<PostsEntity> findAllQuestions (@Param("type") Long type);
+	public List<PostsEntity> findPostsByType (@Param("type") Long type);
 }

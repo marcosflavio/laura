@@ -25,7 +25,7 @@ public class PostsService {
 		return repository.findOne(id);
 	}
 	
-	public List<PostsEntity> findAllQuestions(Long type) {
-		return repository.findAllQuestions(type);
+	public List<PostsEntity> findPostsByType(Long type) {
+		return repository.findPostsByType(type);
 	}
 }
