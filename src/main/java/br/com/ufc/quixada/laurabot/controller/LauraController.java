@@ -27,7 +27,7 @@ public class LauraController {
 	@RequestMapping(value = "/clustering", method = RequestMethod.GET)
 	public void clustering () {
 		QuestionService qs = new QuestionService();
-		Kmeans kmeans = new Kmeans (500);
+		Kmeans kmeans = new Kmeans (5);
 		List<Question> questions = qs.transformToQuestion(service.findPostsByType(1L));
 		kmeans.setQuestions(questions);
 		kmeans.init();

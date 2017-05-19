@@ -93,7 +93,7 @@ public class Kmeans {
 	public List<Question> calculateCentroids() {
 		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
-		double max = Double.MAX_VALUE;
+		double max = Double.POSITIVE_INFINITY;
 		double dist = max;
 		List<Question> centroids = new ArrayList<>();
 		for (int i = 0; i < clusters.size(); i++) {
@@ -107,6 +107,7 @@ public class Kmeans {
 					}
 				}
 				mean = sumDistance / (questions.size() - 1);
+
 				if (mean < dist) {
 					dist = mean;
 					clusters.get(i).setCentroid(questions.get(j));
@@ -170,7 +171,6 @@ public class Kmeans {
 			// this.calculateCentroidsPercentVariation(oldCentroids,
 			// newCentroids);
 			System.err.println("Fim da " + i + " iteração");
-			this.clearClusters();
 			calculateCentroids();
 			i++;
 		}
