@@ -7,14 +7,14 @@ public class Cluster {
 
 	private List<DQuestion> dQuestions;
 
-	private DQuestion centroid;
+	private DQuestion medoid;
 
 	private int id;
 
 	public Cluster(int id) {
 		this.id = id;
 		this.dQuestions = new ArrayList<DQuestion>();
-		this.centroid = null;
+		this.medoid = null;
 	}
 
 	public List<DQuestion> getQuestions() {
@@ -25,12 +25,12 @@ public class Cluster {
 		this.dQuestions = dQuestions;
 	}
 
-	public DQuestion getCentroid() {
-		return centroid;
+	public DQuestion getMedoid() {
+		return medoid;
 	}
 
-	public void setCentroid(DQuestion centroid) {
-		this.centroid = centroid;
+	public void setMedoid(DQuestion medoid) {
+		this.medoid = medoid;
 	}
 
 	public int getId() {

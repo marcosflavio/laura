@@ -6,15 +6,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.ufc.quixada.laurabot.clustering.domain.Cluster;
 import br.com.ufc.quixada.laurabot.clustering.domain.LevenshteinDistance;
 import br.com.ufc.quixada.laurabot.clustering.domain.DQuestion;
 
 public class Kmeans {
+	
+	@Autowired
+	private LevenshteinDistance levenshteinDistance;
+	
 	private int numClusters;
+	
 	private List<DQuestion> dQuestions;
+	
 	private List<Cluster> clusters;
 
 	public Kmeans(int k, List<DQuestion> dQuestions) {
@@ -44,14 +54,14 @@ public class Kmeans {
 		for (int j = 0; j < this.numClusters; j++) {
 			DQuestion centroid = dQuestions.get(possibleCentroids.get(j));
 			centroid.setClusterId(j);
-			clusters.get(j).setCentroid(centroid);
+			clusters.get(j).setMedoid(centroid);
 		}
 	}
 
 	private void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
-			System.out.println("Centroid: " + cl.getCentroid() + "Size: " + cl.getQuestions().size());
+			System.out.println("Centroid: " + cl.getMedoid() + "Size: " + cl.getQuestions().size());
 			plotQuestions(cl.getQuestions(), cl.getId());
 		}
 	}
@@ -72,6 +82,10 @@ public class Kmeans {
 	        }	
 	}
 	
+	private void resetClusters() {
+		this.clusters.clear();
+	}
+	
 	private void clearClusters() {
 		for (Cluster cluster : this.clusters) {
 			cluster.clearCluster();
@@ -81,7 +95,7 @@ public class Kmeans {
 	private List<DQuestion> getCentroids() {
 		List<DQuestion> centroids = new ArrayList<DQuestion>(this.numClusters);
 		for (Cluster cluster : this.clusters) {
-			DQuestion aux = cluster.getCentroid();
+			DQuestion aux = cluster.getMedoid();
 			DQuestion dQuestion = new DQuestion(aux.getTitle(), aux.getId());
 			dQuestion.setClusterId(aux.getClusterId());
 			centroids.add(dQuestion);
@@ -92,13 +106,12 @@ public class Kmeans {
 	private void assignCluster() {
 		Double max = Double.MAX_VALUE;
 		Double min = max;
-		LevenshteinDistance levenshtein = new LevenshteinDistance();
 		this.clearClusters();
 		List<DQuestion> centroids = this.getCentroids();
 		int clusterId = -1;
 		for (int i = 0; i < this.dQuestions.size(); i++) {
 			for (int j = 0; j < centroids.size(); j++) {
-				Double distance = levenshtein.calculateDistance(dQuestions.get(i), centroids.get(j));
+				Double distance = levenshteinDistance.calculateDistance(dQuestions.get(i), centroids.get(j));
 				if (distance < min) {
 					min = distance;
 					clusterId = centroids.get(j).getClusterId();
@@ -112,14 +125,13 @@ public class Kmeans {
 	}
 	
 	private List<DQuestion> calculateCentroids() {
-		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
 		double max = Double.POSITIVE_INFINITY;
 		double dist = max;
 		List<DQuestion> centroids = new ArrayList<>();
 		for (int i = 0; i < clusters.size(); i++) {
 			List<DQuestion> dQuestions = clusters.get(i).getQuestions();
-			dQuestions.add(clusters.get(i).getCentroid());
+			dQuestions.add(clusters.get(i).getMedoid());
 			for (int j = 0; j < dQuestions.size(); j++) {
 				double sumDistance = 0;
 				for (int k = 0; k < dQuestions.size(); k++) {
@@ -131,27 +143,26 @@ public class Kmeans {
 
 				if (mean < dist) {
 					dist = mean;
-					clusters.get(i).setCentroid(dQuestions.get(j));
+					clusters.get(i).setMedoid(dQuestions.get(j));
 				}
 			}
-			clusters.get(i).getCentroid().setClusterId(clusters.get(i).getId());
-			centroids.add(clusters.get(i).getCentroid());
+			clusters.get(i).getMedoid().setClusterId(clusters.get(i).getId());
+			centroids.add(clusters.get(i).getMedoid());
 			dist = max;
 		}
 		return centroids;
 	}
-
-	@SuppressWarnings("unused")
-	private Double calculateCentroidsPercentVariation(List<DQuestion> oldCentroids, List<DQuestion> newCentroids) {
+	
+	private Double calculateMedoidsPercentVariation(List<DQuestion> oldMedoids, List<DQuestion> newMedoids) {
 		double distance = 0.0;
-		LevenshteinDistance levenshtein = new LevenshteinDistance();
-		for (int i = 0; i < oldCentroids.size(); i++) {
-			distance += levenshtein.calculateDistance(oldCentroids.get(i), newCentroids.get(i));
+		for (int i = 0; i < oldMedoids.size(); i++) {
+			distance += levenshteinDistance.calculateDistance(oldMedoids.get(i), newMedoids.get(i));
 		}
-		double mean = (distance / oldCentroids.size());
+		double mean = (distance / oldMedoids.size());
 		return mean;
 	}
 
+	@SuppressWarnings("unused")
 	private int getNumClusters() {
 		return numClusters;
 	}
@@ -187,23 +198,72 @@ public class Kmeans {
 
 	private void calculate() {
 		int i = 0;
-		System.err.println("Comecei a calcular..");
-		while (i < this.getNumClusters()) {
+		while (i < 10) { //this 10 param is only temporally
 			this.assignCluster();
-			// oldCentroids = getCentroids();
-			System.err.println("Inicio da " + i + " iteração");
+			List<DQuestion> oldCentroids = getCentroids();
 			this.plotClusters();
-			// newCentroids = this.calculateCentroids();
-			// this.calculateCentroidsPercentVariation(oldCentroids,
-			// newCentroids);
-			System.err.println("Fim da " + i + " iteração");
+			List<DQuestion> newCentroids = this.calculateCentroids();
+			this.calculateMedoidsPercentVariation(oldCentroids, newCentroids);
 			calculateCentroids();
 			i++;
 		}
+	}
+	
+	private void calculateToElbow() {
+		assignCluster();
+		calculateCentroids();
 	}
 	
 	public void doClustering() {
 		init();
 		calculate();
 	}
+	
+	public Double calculateSSE() {
+		Double distanceSum = 0.0;
+		for (Cluster cluster : clusters) {
+			DQuestion medoid = cluster.getMedoid();
+			for (DQuestion dQuestion : cluster.getQuestions()) {
+				Double distance = levenshteinDistance.calculateDistance(dQuestion, medoid);
+				distanceSum += distance * distance;
+			}
+		}
+		return distanceSum;
+	}
+
+	public Map<Integer, Double> calculateElbowMethod() {
+		Integer k = numClusters;
+		Integer maxK = 20;
+		Map<Integer, Double> SSE = new HashMap<>();
+
+		init();
+
+		for (; k < maxK; k++) {
+			this.numClusters = k;
+			if (k != 2)
+				initClusters();
+
+			calculateToElbow();
+			SSE.put(k, calculateSSE());
+			resetClusters();
+		}
+		return SSE;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
