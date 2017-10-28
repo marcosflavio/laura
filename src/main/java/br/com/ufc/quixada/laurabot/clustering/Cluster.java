@@ -43,7 +43,6 @@ public class Cluster {
 
 	public void clearCluster() {
 		if (this.questions.size() > 0) {
-			// TODO In the future, set -1 to clusterId of question
 			this.questions.clear();
 		}
 	}

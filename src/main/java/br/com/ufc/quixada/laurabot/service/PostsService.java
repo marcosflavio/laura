@@ -26,6 +26,6 @@ public class PostsService {
 	}
 	
 	public List<PostsEntity> findPostsByType(Long type) {
-		return repository.findPostsByType(type, "c#");
+		return repository.findPostsByType(type);
 	}
 }

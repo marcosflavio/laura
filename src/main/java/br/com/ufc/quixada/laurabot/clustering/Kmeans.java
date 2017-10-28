@@ -1,7 +1,11 @@
 package br.com.ufc.quixada.laurabot.clustering;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Kmeans {
@@ -28,7 +32,6 @@ public class Kmeans {
 		}
 	}
 	
-	//TODO Remove centroids from the main list
 	private void setRandomCentroids() {
 		List<Integer> possibleCentroids = new ArrayList<>();
 		for (int i = 0; i < this.questions.size(); i++) {
@@ -45,11 +48,27 @@ public class Kmeans {
 	public void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
-			System.out.println(cl.getCentroid());
-			//cl.plotCluster();
+			System.out.println("Centroid: " + cl.getCentroid() + "Size: " + cl.getQuestions().size());
+			plotQuestions(cl.getQuestions(), cl.getId());
 		}
 	}
-
+	
+	public void plotQuestions(List<Question> questions, Integer id) {
+		FileWriter arquivo;
+			try {  
+	            arquivo = new FileWriter(new File("/home/marcos/clusters/" + new Date().toString() + "cluster " + id.toString() +".txt"));  
+	            for(Question q : questions){
+	            	arquivo.write(q.getTitle());
+	            	arquivo.write("\n");
+	            }  
+	            arquivo.close();  
+	        } catch (IOException e) {  
+	            e.printStackTrace();  
+	        } catch (Exception e) {  
+	            e.printStackTrace();  
+	        }	
+	}
+	
 	public void clearClusters() {
 		for (Cluster cluster : this.clusters) {
 			cluster.clearCluster();
@@ -89,7 +108,6 @@ public class Kmeans {
 		}
 	}
 	
-	//TODO Remove centroids from the main list
 	public List<Question> calculateCentroids() {
 		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
@@ -103,7 +121,7 @@ public class Kmeans {
 				double sumDistance = 0;
 				for (int k = 0; k < questions.size(); k++) {
 					if (!questions.get(j).equals(questions.get(k))) {
-						sumDistance = +levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+						sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
 					}
 				}
 				mean = sumDistance / (questions.size() - 1);
@@ -124,7 +142,7 @@ public class Kmeans {
 		double distance = 0.0;
 		LevenshteinDistance levenshtein = new LevenshteinDistance();
 		for (int i = 0; i < oldCentroids.size(); i++) {
-			distance = +levenshtein.calculateDistance(oldCentroids.get(i), newCentroids.get(i));
+			distance += levenshtein.calculateDistance(oldCentroids.get(i), newCentroids.get(i));
 		}
 		double mean = (distance / oldCentroids.size());
 		return mean;
@@ -160,7 +178,7 @@ public class Kmeans {
 	}
 
 	public void calculate() {
-		int i = 1;
+		int i = 0;
 		System.err.println("Comecei a calcular..");
 		while (i < this.getNumClusters()) {
 			this.assignCluster();
