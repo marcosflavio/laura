@@ -250,20 +250,3 @@ public class Kmeans {
 		return SSE;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
