@@ -1,4 +1,4 @@
-package br.com.ufc.quixada.laurabot.model;
+package br.com.ufc.quixada.laurabot.api.model;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Posts")
-public class PostsEntity {
+public class Post {
 
 	@Id
 	@Column(name = "Id")
@@ -45,7 +45,7 @@ public class PostsEntity {
 	@Column(name = "Tags")
 	private String Tags;
 
-	public PostsEntity() {
+	public Post() {
 
 	}
 

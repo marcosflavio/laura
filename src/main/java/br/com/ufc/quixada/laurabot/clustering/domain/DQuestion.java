@@ -1,12 +1,14 @@
-package br.com.ufc.quixada.laurabot.clustering;
+package br.com.ufc.quixada.laurabot.clustering.domain;
 
-public class Question {
+public class DQuestion {
 
 	private String title;
+	
 	private Long id;
+
 	private int clusterId = -1;
 
-	public Question(String title, Long id) {
+	public DQuestion(String title, Long id) {
 		this.title = title;
 		this.id = id;
 	}
@@ -37,7 +39,7 @@ public class Question {
 
 	@Override
 	public String toString() {
-		return "Question [title=" + title + ", id=" + id + ", Cluster=" + clusterId + "]";
+		return "DQuestion [title=" + title + ", id=" + id + ", Cluster=" + clusterId + "]";
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class Question {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Question other = (Question) obj;
+		DQuestion other = (DQuestion) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

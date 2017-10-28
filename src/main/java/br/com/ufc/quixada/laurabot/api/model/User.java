@@ -1,4 +1,4 @@
-package br.com.ufc.quixada.laurabot.model;
+package br.com.ufc.quixada.laurabot.api.model;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Users")
-public class UsersEntity {
+public class User {
 	
 	@Id
 	@Column(name = "id")
@@ -36,7 +36,7 @@ public class UsersEntity {
 	@Column(name = "accountId")
 	private int accountId;
 	
-	public UsersEntity () {
+	public User () {
 		
 	}
 

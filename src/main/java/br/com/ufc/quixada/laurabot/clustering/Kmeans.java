@@ -8,19 +8,22 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import br.com.ufc.quixada.laurabot.clustering.domain.Cluster;
+import br.com.ufc.quixada.laurabot.clustering.domain.LevenshteinDistance;
+import br.com.ufc.quixada.laurabot.clustering.domain.DQuestion;
+
 public class Kmeans {
 	private int numClusters;
-	private List<Question> questions;
+	private List<DQuestion> dQuestions;
 	private List<Cluster> clusters;
 
-	public Kmeans(int k) {
+	public Kmeans(int k, List<DQuestion> dQuestions) {
 		this.numClusters = k;
-		this.questions = new ArrayList<>();
+		this.dQuestions = dQuestions;
 		this.clusters = new ArrayList<>();
 	}
 
-	public void init() {
-		System.err.println("Iniciei o kmeans");
+	private void init() {
 		this.initClusters();
 		this.setRandomCentroids();
 	}
@@ -34,18 +37,18 @@ public class Kmeans {
 	
 	private void setRandomCentroids() {
 		List<Integer> possibleCentroids = new ArrayList<>();
-		for (int i = 0; i < this.questions.size(); i++) {
+		for (int i = 0; i < this.dQuestions.size(); i++) {
 			possibleCentroids.add(i);
 		}
 		Collections.shuffle(possibleCentroids);
 		for (int j = 0; j < this.numClusters; j++) {
-			Question centroid = questions.get(possibleCentroids.get(j));
+			DQuestion centroid = dQuestions.get(possibleCentroids.get(j));
 			centroid.setClusterId(j);
 			clusters.get(j).setCentroid(centroid);
 		}
 	}
 
-	public void plotClusters() {
+	private void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
 			System.out.println("Centroid: " + cl.getCentroid() + "Size: " + cl.getQuestions().size());
@@ -53,11 +56,11 @@ public class Kmeans {
 		}
 	}
 	
-	public void plotQuestions(List<Question> questions, Integer id) {
+	private void plotQuestions(List<DQuestion> dQuestions, Integer id) {
 		FileWriter arquivo;
 			try {  
 	            arquivo = new FileWriter(new File("/home/marcos/clusters/" + new Date().toString() + "cluster " + id.toString() +".txt"));  
-	            for(Question q : questions){
+	            for(DQuestion q : dQuestions){
 	            	arquivo.write(q.getTitle());
 	            	arquivo.write("\n");
 	            }  
@@ -69,66 +72,66 @@ public class Kmeans {
 	        }	
 	}
 	
-	public void clearClusters() {
+	private void clearClusters() {
 		for (Cluster cluster : this.clusters) {
 			cluster.clearCluster();
 		}
 	}
 
-	public List<Question> getCentroids() {
-		List<Question> centroids = new ArrayList<Question>(this.numClusters);
+	private List<DQuestion> getCentroids() {
+		List<DQuestion> centroids = new ArrayList<DQuestion>(this.numClusters);
 		for (Cluster cluster : this.clusters) {
-			Question aux = cluster.getCentroid();
-			Question question = new Question(aux.getTitle(), aux.getId());
-			question.setClusterId(aux.getClusterId());
-			centroids.add(question);
+			DQuestion aux = cluster.getCentroid();
+			DQuestion dQuestion = new DQuestion(aux.getTitle(), aux.getId());
+			dQuestion.setClusterId(aux.getClusterId());
+			centroids.add(dQuestion);
 		}
 		return centroids;
 	}
 
-	public void assignCluster() {
+	private void assignCluster() {
 		Double max = Double.MAX_VALUE;
 		Double min = max;
 		LevenshteinDistance levenshtein = new LevenshteinDistance();
 		this.clearClusters();
-		List<Question> centroids = this.getCentroids();
+		List<DQuestion> centroids = this.getCentroids();
 		int clusterId = -1;
-		for (int i = 0; i < this.questions.size(); i++) {
+		for (int i = 0; i < this.dQuestions.size(); i++) {
 			for (int j = 0; j < centroids.size(); j++) {
-				Double distance = levenshtein.calculateDistance(questions.get(i), centroids.get(j));
+				Double distance = levenshtein.calculateDistance(dQuestions.get(i), centroids.get(j));
 				if (distance < min) {
 					min = distance;
 					clusterId = centroids.get(j).getClusterId();
 				}
 			}
-			this.questions.get(i).setClusterId(clusterId);
-			getClusterById(clusterId).addQuestion(this.questions.get(i));
+			this.dQuestions.get(i).setClusterId(clusterId);
+			getClusterById(clusterId).addQuestion(this.dQuestions.get(i));
 			clusterId = -1;
 			min = max;
 		}
 	}
 	
-	public List<Question> calculateCentroids() {
+	private List<DQuestion> calculateCentroids() {
 		LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		double mean;
 		double max = Double.POSITIVE_INFINITY;
 		double dist = max;
-		List<Question> centroids = new ArrayList<>();
+		List<DQuestion> centroids = new ArrayList<>();
 		for (int i = 0; i < clusters.size(); i++) {
-			List<Question> questions = clusters.get(i).getQuestions();
-			questions.add(clusters.get(i).getCentroid());
-			for (int j = 0; j < questions.size(); j++) {
+			List<DQuestion> dQuestions = clusters.get(i).getQuestions();
+			dQuestions.add(clusters.get(i).getCentroid());
+			for (int j = 0; j < dQuestions.size(); j++) {
 				double sumDistance = 0;
-				for (int k = 0; k < questions.size(); k++) {
-					if (!questions.get(j).equals(questions.get(k))) {
-						sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+				for (int k = 0; k < dQuestions.size(); k++) {
+					if (!dQuestions.get(j).equals(dQuestions.get(k))) {
+						sumDistance += levenshteinDistance.calculateDistance(dQuestions.get(j), dQuestions.get(k));
 					}
 				}
-				mean = sumDistance / (questions.size() - 1);
+				mean = sumDistance / (dQuestions.size() - 1);
 
 				if (mean < dist) {
 					dist = mean;
-					clusters.get(i).setCentroid(questions.get(j));
+					clusters.get(i).setCentroid(dQuestions.get(j));
 				}
 			}
 			clusters.get(i).getCentroid().setClusterId(clusters.get(i).getId());
@@ -138,7 +141,8 @@ public class Kmeans {
 		return centroids;
 	}
 
-	public Double calculateCentroidsPercentVariation(List<Question> oldCentroids, List<Question> newCentroids) {
+	@SuppressWarnings("unused")
+	private Double calculateCentroidsPercentVariation(List<DQuestion> oldCentroids, List<DQuestion> newCentroids) {
 		double distance = 0.0;
 		LevenshteinDistance levenshtein = new LevenshteinDistance();
 		for (int i = 0; i < oldCentroids.size(); i++) {
@@ -148,27 +152,31 @@ public class Kmeans {
 		return mean;
 	}
 
-	public int getNumClusters() {
+	private int getNumClusters() {
 		return numClusters;
 	}
-
-	public void setNumClusters(int numClusters) {
+	
+	@SuppressWarnings("unused")
+	private void setNumClusters(int numClusters) {
 		this.numClusters = numClusters;
 	}
-
-	public List<Question> getQuestions() {
-		return questions;
+	
+	@SuppressWarnings("unused")
+	private List<DQuestion> getQuestions() {
+		return dQuestions;
 	}
-
-	public void setQuestions(List<Question> questions) {
-		this.questions = questions;
+	
+	@SuppressWarnings("unused")
+	private void setQuestions(List<DQuestion> dQuestions) {
+		this.dQuestions = dQuestions;
 	}
-
-	public List<Cluster> getClusters() {
+	
+	@SuppressWarnings("unused")
+	private List<Cluster> getClusters() {
 		return this.clusters;
 	}
 
-	public Cluster getClusterById(int id) {
+	private Cluster getClusterById(int id) {
 		for (int i = 0; i < this.clusters.size(); i++) {
 			if (this.clusters.get(i).getId() == id) {
 				return this.clusters.get(i);
@@ -177,7 +185,7 @@ public class Kmeans {
 		return null;
 	}
 
-	public void calculate() {
+	private void calculate() {
 		int i = 0;
 		System.err.println("Comecei a calcular..");
 		while (i < this.getNumClusters()) {
@@ -192,5 +200,10 @@ public class Kmeans {
 			calculateCentroids();
 			i++;
 		}
+	}
+	
+	public void doClustering() {
+		init();
+		calculate();
 	}
 }
