@@ -3,33 +3,35 @@ package br.com.ufc.quixada.laurabot.clustering.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ufc.quixada.laurabot.api.model.Question;
+
 public class Cluster {
 
-	private List<DQuestion> dQuestions;
+	private List<Question> questions;
 
-	private DQuestion medoid;
+	private Question medoid;
 
 	private int id;
 
 	public Cluster(int id) {
 		this.id = id;
-		this.dQuestions = new ArrayList<DQuestion>();
+		this.questions = new ArrayList<Question>();
 		this.medoid = null;
 	}
 
-	public List<DQuestion> getQuestions() {
-		return dQuestions;
+	public List<Question> getQuestions() {
+		return questions;
 	}
 
-	public void setQuestions(List<DQuestion> dQuestions) {
-		this.dQuestions = dQuestions;
+	public void setQuestions(List<Question> dQuestions) {
+		this.questions = dQuestions;
 	}
 
-	public DQuestion getMedoid() {
+	public Question getMedoid() {
 		return medoid;
 	}
 
-	public void setMedoid(DQuestion medoid) {
+	public void setMedoid(Question medoid) {
 		this.medoid = medoid;
 	}
 
@@ -37,21 +39,21 @@ public class Cluster {
 		return id;
 	}
 
-	public void addQuestion(DQuestion dQuestion) {
-		if (this.dQuestions != null) {
-			this.dQuestions.add(dQuestion);
+	public void addQuestion(Question dQuestion) {
+		if (this.questions != null) {
+			this.questions.add(dQuestion);
 		}
 	}
 
 	public void clearCluster() {
-		if (this.dQuestions.size() > 0) {
-			this.dQuestions.clear();
+		if (this.questions.size() > 0) {
+			this.questions.clear();
 		}
 	}
 
-	public boolean hasQuestion(DQuestion dQuestion) {
-		for (DQuestion q : this.dQuestions) {
-			if (q.equals(dQuestion)) {
+	public boolean hasQuestion(Question questionReceived) {
+		for (Question q : this.questions) {
+			if (q.equals(questionReceived)) {
 				return true;
 			}
 		}
