@@ -10,15 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.ufc.quixada.laurabot.api.model.Question;
 import br.com.ufc.quixada.laurabot.clustering.domain.Cluster;
 import br.com.ufc.quixada.laurabot.clustering.domain.LevenshteinDistance;
 
 public class Kmeans {
 	
-	@Autowired
 	private LevenshteinDistance levenshteinDistance;
 	
 	private int numClusters;
@@ -27,10 +24,13 @@ public class Kmeans {
 	
 	private List<Cluster> clusters;
 
+	private final Integer minK = 2;
+	
 	public Kmeans(int k, List<Question> questions) {
 		this.numClusters = k;
 		this.questions = questions;
 		this.clusters = new ArrayList<>();
+		this.levenshteinDistance = new LevenshteinDistance();
 	}
 
 	private void init() {
@@ -39,18 +39,32 @@ public class Kmeans {
 	}
 
 	private void initClusters() {
-		for (int i = 0; i < this.numClusters; i++) {
+		for (int i = 1; i <= this.numClusters; i++) {
 			Cluster cluster = new Cluster(i);
 			this.clusters.add(cluster);
 		}
 	}
 	
-	private void setRandomMedoids() {
+	private void createNewClusterWithRandomMedoid(Integer id) {
+		Question newMedoid = createARandomMedoid(getMedoids());
+		Cluster cluster = new Cluster(id);
+		cluster.setMedoid(newMedoid);
+		newMedoid.setClusterId(cluster.getId());
+		this.clusters.add(cluster);
+	}
+	
+	private List<Integer> generateAShuflledListOfNumbers(Integer maxValue) {
 		List<Integer> possibleMedoids = new ArrayList<>();
-		for (int i = 0; i < this.questions.size(); i++) {
+		for (int i = 0; i < maxValue; i++) {
 			possibleMedoids.add(i);
 		}
 		Collections.shuffle(possibleMedoids);
+		return possibleMedoids;
+	}
+	
+	private void setRandomMedoids() {
+		List<Integer> possibleMedoids = generateAShuflledListOfNumbers(questions.size());
+		
 		for (int j = 0; j < this.numClusters; j++) {
 			Question medoid = questions.get(possibleMedoids.get(j));
 			medoid.setClusterId(j);
@@ -58,6 +72,16 @@ public class Kmeans {
 		}
 	}
 
+	private Question createARandomMedoid(List<Question> actualMedoids) {
+		Boolean isANotValidMedoid = true;
+		Integer questionIndex = null;
+		while (isANotValidMedoid) {
+			questionIndex = generateAShuflledListOfNumbers(questions.size()).get(0);
+			isANotValidMedoid = actualMedoids.contains(questions.get(questionIndex));
+		}
+		return questions.get(questionIndex);
+	}
+	
 	private void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
@@ -80,10 +104,6 @@ public class Kmeans {
 	        } catch (Exception e) {  
 	            e.printStackTrace();  
 	        }	
-	}
-	
-	private void resetClusters() {
-		this.clusters.clear();
 	}
 	
 	private void clearClusters() {
@@ -128,24 +148,27 @@ public class Kmeans {
 		List<Question> medoids = new ArrayList<>();
 		for (int i = 0; i < clusters.size(); i++) {
 			List<Question> questions = clusters.get(i).getQuestions();
-			questions.add(clusters.get(i).getMedoid());
-			for (int j = 0; j < questions.size(); j++) {
-				double sumDistance = 0;
-				for (int k = 0; k < questions.size(); k++) {
-					if (!questions.get(j).equals(questions.get(k))) {
-						sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+			
+			if(questions.size() > 1) {
+				questions.add(clusters.get(i).getMedoid());
+				for (int j = 0; j < questions.size(); j++) {
+					double sumDistance = 0;
+					for (int k = 0; k < questions.size(); k++) {
+						if (!questions.get(j).equals(questions.get(k))) {
+							sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+						}
+					}
+					mean = sumDistance / (questions.size() - 1);
+
+					if (mean < dist) {
+						dist = mean;
+						clusters.get(i).setMedoid(questions.get(j));
 					}
 				}
-				mean = sumDistance / (questions.size() - 1);
-
-				if (mean < dist) {
-					dist = mean;
-					clusters.get(i).setMedoid(questions.get(j));
-				}
+				clusters.get(i).getMedoid().setClusterId(clusters.get(i).getId());
+				medoids.add(clusters.get(i).getMedoid());
+				dist = max;
 			}
-			clusters.get(i).getMedoid().setClusterId(clusters.get(i).getId());
-			medoids.add(clusters.get(i).getMedoid());
-			dist = max;
 		}
 		return medoids;
 	}
@@ -207,9 +230,10 @@ public class Kmeans {
 		}
 	}
 	
-	private void calculateToElbow() {
+	private void calculateToElbow(Integer k) {
+		if(k > minK)
+			calculateMedoids();
 		assignCluster();
-		calculateMedoids();
 	}
 	
 	public void doClustering() {
@@ -231,19 +255,27 @@ public class Kmeans {
 
 	public Map<Integer, Double> calculateElbowMethod() {
 		Integer k = numClusters;
-		Integer maxK = 20;
+		Integer maxK = 11;
+		
 		Map<Integer, Double> SSE = new HashMap<>();
 
 		init();
 
 		for (; k < maxK; k++) {
+			System.out.println("K = " + k);
 			this.numClusters = k;
-			if (k != 2)
-				initClusters();
+			
+			if (k != minK) {
+				createNewClusterWithRandomMedoid(k);
+			}
 
-			calculateToElbow();
+			calculateToElbow(k);
 			SSE.put(k, calculateSSE());
-			resetClusters();
+			System.out.println("Fim do calculo de K = " + k);
+			
+			System.out.println("Clusters size: " + clusters.size());
+			System.out.println("Medoids size: " + getMedoids().size());
+			
 		}
 		return SSE;
 	}
