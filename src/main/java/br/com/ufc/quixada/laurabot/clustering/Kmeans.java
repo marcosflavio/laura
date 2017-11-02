@@ -39,7 +39,7 @@ public class Kmeans {
 	}
 
 	private void initClusters() {
-		for (int i = 1; i <= this.numClusters; i++) {
+		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cluster = new Cluster(i);
 			this.clusters.add(cluster);
 		}
@@ -255,7 +255,7 @@ public class Kmeans {
 
 	public Map<Integer, Double> calculateElbowMethod() {
 		Integer k = numClusters;
-		Integer maxK = 11;
+		Integer maxK = 10;
 		
 		Map<Integer, Double> SSE = new HashMap<>();
 
