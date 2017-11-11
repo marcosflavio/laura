@@ -255,7 +255,7 @@ public class Kmeans {
 
 	public Map<Integer, Double> calculateElbowMethod() {
 		Integer k = numClusters;
-		Integer maxK = 10;
+		Integer maxK = 31;
 		
 		Map<Integer, Double> SSE = new HashMap<>();
 
@@ -275,7 +275,7 @@ public class Kmeans {
 			
 			System.out.println("Clusters size: " + clusters.size());
 			System.out.println("Medoids size: " + getMedoids().size());
-			
+			System.out.println("SSE of k = " +  k + " : " + SSE.get(k));
 		}
 		return SSE;
 	}

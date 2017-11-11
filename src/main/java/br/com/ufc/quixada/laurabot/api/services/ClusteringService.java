@@ -15,9 +15,16 @@ public class ClusteringService {
 	@Autowired
 	private QuestionService questionService;
 	
+	@Autowired
+	private PostsService postsService;
+	
 	public Map<Integer, Double> clustering() {
-		List<Question> questions = questionService.findAll();
+		List<Long> ids = postsService.findPostsIdByTag("<java>");
+		
+		List<Question> questions = questionService.findByPostsId(ids);
+		
 		Kmeans kmeans = new Kmeans (2, questions);
+		
 		return kmeans.calculateElbowMethod();
 	}
 }
