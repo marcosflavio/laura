@@ -17,4 +17,8 @@ public class QuestionService {
 	public List<Question> findAll() {
 		return questionRepository.findAll();
 	}
+	
+	public List<Question> findByPostsId(List<Long> postsId) {
+		return questionRepository.findByPostsId(postsId);
+	}
 }

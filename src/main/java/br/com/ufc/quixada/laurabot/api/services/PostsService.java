@@ -28,4 +28,8 @@ public class PostsService {
 	public List<Post> findPostsByType(Long type) {
 		return repository.findPostsByType(type);
 	}
+	
+	public List<Long> findPostsIdByTag(String tag) {
+		return repository.findPostsByTag(tag);
+	}
 }
