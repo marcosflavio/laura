@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.ufc.quixada.laurabot.api.model.Question;
 import br.com.ufc.quixada.laurabot.clustering.domain.Cluster;
 import br.com.ufc.quixada.laurabot.clustering.domain.LevenshteinDistance;
+import br.com.ufc.quixada.laurabot.clustering.domain.commons.text.CommonsTextSimilarity;
 
 public class Kmeans {
 	
@@ -127,18 +130,33 @@ public class Kmeans {
 		List<Question> medoids = this.getMedoids();
 		int clusterId = -1;
 		for (int i = 0; i < this.questions.size(); i++) {
-			for (int j = 0; j < medoids.size(); j++) {
-				Double distance = levenshteinDistance.calculateDistance(questions.get(i), medoids.get(j));
-				if (distance < min) {
-					min = distance;
-					clusterId = medoids.get(j).getClusterId();
+
+			if (validateString(questions.get(i).getTitle())) {
+				for (int j = 0; j < medoids.size(); j++) {
+					if (validateString(medoids.get(j).getTitle())) {
+//						 Double distanceLev =
+//						 levenshteinDistance.calculateDistance(questions.get(i),
+//						 medoids.get(j));
+						Double distance = CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(questions.get(i).getTitle(),
+								medoids.get(j).getTitle()).doubleValue();
+						
+						if (distance < min) {
+							min = distance;
+							clusterId = medoids.get(j).getClusterId();
+						}
+					}
 				}
+				this.questions.get(i).setClusterId(clusterId);
+				getClusterById(clusterId).addQuestion(this.questions.get(i));
+				clusterId = -1;
+				min = max;
 			}
-			this.questions.get(i).setClusterId(clusterId);
-			getClusterById(clusterId).addQuestion(this.questions.get(i));
-			clusterId = -1;
-			min = max;
+
 		}
+	}
+	
+	private Boolean validateString(String someString) {
+		return StringUtils.isNotBlank(someString) && StringUtils.isNotEmpty(someString);
 	}
 	
 	private List<Question> calculateMedoids() {
@@ -155,7 +173,9 @@ public class Kmeans {
 					double sumDistance = 0;
 					for (int k = 0; k < questions.size(); k++) {
 						if (!questions.get(j).equals(questions.get(k))) {
-							sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+							//sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
+							sumDistance += CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(questions.get(j).getTitle(),
+									questions.get(k).getTitle()).doubleValue();
 						}
 					}
 					mean = sumDistance / (questions.size() - 1);
@@ -243,19 +263,24 @@ public class Kmeans {
 	
 	public Double calculateSSE() {
 		Double distanceSum = 0.0;
+//		Double distanceSumLev = 0.0;
+		
 		for (Cluster cluster : clusters) {
 			Question medoid = cluster.getMedoid();
 			for (Question question : cluster.getQuestions()) {
-				Double distance = levenshteinDistance.calculateDistance(question, medoid);
+//				Double distanceLev = levenshteinDistance.calculateDistance(question, medoid);
+				Double distance = CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(question.getTitle(), medoid.getTitle()).doubleValue();
 				distanceSum += distance * distance;
+//				distanceSumLev += distanceLev * distanceLev;
 			}
 		}
+		
 		return distanceSum;
 	}
 
 	public Map<Integer, Double> calculateElbowMethod() {
 		Integer k = numClusters;
-		Integer maxK = 31;
+		Integer maxK = 301;
 		
 		Map<Integer, Double> SSE = new HashMap<>();
 
