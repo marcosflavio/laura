@@ -12,24 +12,24 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import br.com.ufc.quixada.laurabot.api.model.Question;
+import br.com.ufc.quixada.laurabot.api.model.JavaQuestion;
 import br.com.ufc.quixada.laurabot.clustering.domain.Cluster;
 import br.com.ufc.quixada.laurabot.clustering.domain.LevenshteinDistance;
 import br.com.ufc.quixada.laurabot.clustering.domain.commons.text.CommonsTextSimilarity;
 
 public class Kmeans {
-	
+
 	private LevenshteinDistance levenshteinDistance;
-	
+
 	private int numClusters;
-	
-	private List<Question> questions;
-	
+
+	private List<JavaQuestion> questions;
+
 	private List<Cluster> clusters;
 
 	private final Integer minK = 2;
-	
-	public Kmeans(int k, List<Question> questions) {
+
+	public Kmeans(int k, List<JavaQuestion> questions) {
 		this.numClusters = k;
 		this.questions = questions;
 		this.clusters = new ArrayList<>();
@@ -47,15 +47,15 @@ public class Kmeans {
 			this.clusters.add(cluster);
 		}
 	}
-	
+
 	private void createNewClusterWithRandomMedoid(Integer id) {
-		Question newMedoid = createARandomMedoid(getMedoids());
+		JavaQuestion newMedoid = createARandomMedoid(getMedoids());
 		Cluster cluster = new Cluster(id);
 		cluster.setMedoid(newMedoid);
 		newMedoid.setClusterId(cluster.getId());
 		this.clusters.add(cluster);
 	}
-	
+
 	private List<Integer> generateAShuflledListOfNumbers(Integer maxValue) {
 		List<Integer> possibleMedoids = new ArrayList<>();
 		for (int i = 0; i < maxValue; i++) {
@@ -64,18 +64,18 @@ public class Kmeans {
 		Collections.shuffle(possibleMedoids);
 		return possibleMedoids;
 	}
-	
+
 	private void setRandomMedoids() {
 		List<Integer> possibleMedoids = generateAShuflledListOfNumbers(questions.size());
-		
+
 		for (int j = 0; j < this.numClusters; j++) {
-			Question medoid = questions.get(possibleMedoids.get(j));
+			JavaQuestion medoid = questions.get(possibleMedoids.get(j));
 			medoid.setClusterId(j);
 			clusters.get(j).setMedoid(medoid);
 		}
 	}
 
-	private Question createARandomMedoid(List<Question> actualMedoids) {
+	private JavaQuestion createARandomMedoid(List<JavaQuestion> actualMedoids) {
 		Boolean isANotValidMedoid = true;
 		Integer questionIndex = null;
 		while (isANotValidMedoid) {
@@ -84,7 +84,7 @@ public class Kmeans {
 		}
 		return questions.get(questionIndex);
 	}
-	
+
 	private void plotClusters() {
 		for (int i = 0; i < this.numClusters; i++) {
 			Cluster cl = clusters.get(i);
@@ -92,31 +92,32 @@ public class Kmeans {
 			plotQuestions(cl.getQuestions(), cl.getId());
 		}
 	}
-	
-	private void plotQuestions(List<Question> questions, Integer id) {
+
+	private void plotQuestions(List<JavaQuestion> questions, Integer id) {
 		FileWriter arquivo;
-			try {  
-	            arquivo = new FileWriter(new File("/home/marcos/clusters/" + new Date().toString() + "cluster " + id.toString() +".txt"));  
-	            for(Question q : questions){
-	            	arquivo.write(q.getTitle());
-	            	arquivo.write("\n");
-	            }  
-	            arquivo.close();  
-	        } catch (IOException e) {  
-	            e.printStackTrace();  
-	        } catch (Exception e) {  
-	            e.printStackTrace();  
-	        }	
+		try {
+			arquivo = new FileWriter(
+					new File("/home/marcos/clusters/" + new Date().toString() + "cluster " + id.toString() + ".txt"));
+			for (JavaQuestion q : questions) {
+				arquivo.write(q.getTitle());
+				arquivo.write("\n");
+			}
+			arquivo.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	private void clearClusters() {
 		for (Cluster cluster : this.clusters) {
 			cluster.clearCluster();
 		}
 	}
 
-	private List<Question> getMedoids() {
-		List<Question> medoids = new ArrayList<Question>(this.numClusters);
+	private List<JavaQuestion> getMedoids() {
+		List<JavaQuestion> medoids = new ArrayList<JavaQuestion>(this.numClusters);
 		clusters.forEach(cluster -> {
 			medoids.add(cluster.getMedoid());
 		});
@@ -127,19 +128,19 @@ public class Kmeans {
 		Double max = Double.MAX_VALUE;
 		Double min = max;
 		this.clearClusters();
-		List<Question> medoids = this.getMedoids();
+		List<JavaQuestion> medoids = this.getMedoids();
 		int clusterId = -1;
 		for (int i = 0; i < this.questions.size(); i++) {
 
 			if (validateString(questions.get(i).getTitle())) {
 				for (int j = 0; j < medoids.size(); j++) {
 					if (validateString(medoids.get(j).getTitle())) {
-//						 Double distanceLev =
-//						 levenshteinDistance.calculateDistance(questions.get(i),
-//						 medoids.get(j));
-						Double distance = CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(questions.get(i).getTitle(),
-								medoids.get(j).getTitle()).doubleValue();
-						
+						// Double distanceLev =
+						// levenshteinDistance.calculateDistance(questions.get(i),
+						// medoids.get(j));
+						Double distance = CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(
+								questions.get(i).getTitle(), medoids.get(j).getTitle()).doubleValue();
+
 						if (distance < min) {
 							min = distance;
 							clusterId = medoids.get(j).getClusterId();
@@ -154,28 +155,29 @@ public class Kmeans {
 
 		}
 	}
-	
+
 	private Boolean validateString(String someString) {
 		return StringUtils.isNotBlank(someString) && StringUtils.isNotEmpty(someString);
 	}
-	
-	private List<Question> calculateMedoids() {
+
+	private List<JavaQuestion> calculateMedoids() {
 		double mean;
 		double max = Double.POSITIVE_INFINITY;
 		double dist = max;
-		List<Question> medoids = new ArrayList<>();
+		List<JavaQuestion> medoids = new ArrayList<>();
 		for (int i = 0; i < clusters.size(); i++) {
-			List<Question> questions = clusters.get(i).getQuestions();
-			
-			if(questions.size() > 1) {
+			List<JavaQuestion> questions = clusters.get(i).getQuestions();
+
+			if (questions.size() > 1) {
 				questions.add(clusters.get(i).getMedoid());
 				for (int j = 0; j < questions.size(); j++) {
 					double sumDistance = 0;
 					for (int k = 0; k < questions.size(); k++) {
 						if (!questions.get(j).equals(questions.get(k))) {
-							//sumDistance += levenshteinDistance.calculateDistance(questions.get(j), questions.get(k));
-							sumDistance += CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(questions.get(j).getTitle(),
-									questions.get(k).getTitle()).doubleValue();
+							// sumDistance += levenshteinDistance.calculateDistance(questions.get(j),
+							// questions.get(k));
+							sumDistance += CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(
+									questions.get(j).getTitle(), questions.get(k).getTitle()).doubleValue();
 						}
 					}
 					mean = sumDistance / (questions.size() - 1);
@@ -192,14 +194,14 @@ public class Kmeans {
 		}
 		return medoids;
 	}
-	
-	private Double calculateMedoidsVariation(List<Question> oldMedoids, List<Question> newMedoids) {
+
+	private Double calculateMedoidsVariation(List<JavaQuestion> oldMedoids, List<JavaQuestion> newMedoids) {
 		Double distanceSum = 0.0;
-		
+
 		for (int i = 0; i < oldMedoids.size(); i++) {
 			distanceSum += levenshteinDistance.calculateDistance(oldMedoids.get(i), newMedoids.get(i));
 		}
-		
+
 		return distanceSum;
 	}
 
@@ -207,22 +209,22 @@ public class Kmeans {
 	private int getNumClusters() {
 		return numClusters;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void setNumClusters(int numClusters) {
 		this.numClusters = numClusters;
 	}
-	
+
 	@SuppressWarnings("unused")
-	private List<Question> getQuestions() {
+	private List<JavaQuestion> getQuestions() {
 		return questions;
 	}
-	
+
 	@SuppressWarnings("unused")
-	private void setQuestions(List<Question> dQuestions) {
+	private void setQuestions(List<JavaQuestion> dQuestions) {
 		this.questions = dQuestions;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private List<Cluster> getClusters() {
 		return this.clusters;
@@ -239,49 +241,50 @@ public class Kmeans {
 
 	private void calculate() {
 		int i = 0;
-		while (i < 10) { //this 10 param is only temporally
+		while (i < 10) { // this 10 param is only temporally
 			this.assignCluster();
-			List<Question> oldMedoids = getMedoids();
+			List<JavaQuestion> oldMedoids = getMedoids();
 			this.plotClusters();
-			List<Question> newMedoids = this.calculateMedoids();
+			List<JavaQuestion> newMedoids = this.calculateMedoids();
 			this.calculateMedoidsVariation(oldMedoids, newMedoids);
 			calculateMedoids();
 			i++;
 		}
 	}
-	
+
 	private void calculateToElbow(Integer k) {
-		if(k > minK)
+		if (k > minK)
 			calculateMedoids();
 		assignCluster();
 	}
-	
+
 	public void doClustering() {
 		init();
 		calculate();
 	}
-	
+
 	public Double calculateSSE() {
 		Double distanceSum = 0.0;
-//		Double distanceSumLev = 0.0;
-		
+		// Double distanceSumLev = 0.0;
+
 		for (Cluster cluster : clusters) {
-			Question medoid = cluster.getMedoid();
-			for (Question question : cluster.getQuestions()) {
-//				Double distanceLev = levenshteinDistance.calculateDistance(question, medoid);
-				Double distance = CommonsTextSimilarity.applyLongestCommonSubsequenceDistance(question.getTitle(), medoid.getTitle()).doubleValue();
+			JavaQuestion medoid = cluster.getMedoid();
+			for (JavaQuestion question : cluster.getQuestions()) {
+				// Double distanceLev = levenshteinDistance.calculateDistance(question, medoid);
+				Double distance = CommonsTextSimilarity
+						.applyLongestCommonSubsequenceDistance(question.getTitle(), medoid.getTitle()).doubleValue();
 				distanceSum += distance * distance;
-//				distanceSumLev += distanceLev * distanceLev;
+				// distanceSumLev += distanceLev * distanceLev;
 			}
 		}
-		
+
 		return distanceSum;
 	}
 
 	public Map<Integer, Double> calculateElbowMethod() {
 		Integer k = numClusters;
 		Integer maxK = 301;
-		
+
 		Map<Integer, Double> SSE = new HashMap<>();
 
 		init();
@@ -289,7 +292,7 @@ public class Kmeans {
 		for (; k < maxK; k++) {
 			System.out.println("K = " + k);
 			this.numClusters = k;
-			
+
 			if (k != minK) {
 				createNewClusterWithRandomMedoid(k);
 			}
@@ -297,10 +300,10 @@ public class Kmeans {
 			calculateToElbow(k);
 			SSE.put(k, calculateSSE());
 			System.out.println("Fim do calculo de K = " + k);
-			
+
 			System.out.println("Clusters size: " + clusters.size());
 			System.out.println("Medoids size: " + getMedoids().size());
-			System.out.println("SSE of k = " +  k + " : " + SSE.get(k));
+			System.out.println("SSE of k = " + k + " : " + SSE.get(k));
 		}
 		return SSE;
 	}

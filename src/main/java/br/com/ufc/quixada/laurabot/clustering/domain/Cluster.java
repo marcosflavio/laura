@@ -3,35 +3,35 @@ package br.com.ufc.quixada.laurabot.clustering.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ufc.quixada.laurabot.api.model.Question;
+import br.com.ufc.quixada.laurabot.api.model.JavaQuestion;
 
 public class Cluster {
 
-	private List<Question> questions;
+	private List<JavaQuestion> questions;
 
-	private Question medoid;
+	private JavaQuestion medoid;
 
 	private int id;
 
 	public Cluster(int id) {
 		this.id = id;
-		this.questions = new ArrayList<Question>();
+		this.questions = new ArrayList<JavaQuestion>();
 		this.medoid = null;
 	}
 
-	public List<Question> getQuestions() {
+	public List<JavaQuestion> getQuestions() {
 		return questions;
 	}
 
-	public void setQuestions(List<Question> dQuestions) {
+	public void setQuestions(List<JavaQuestion> dQuestions) {
 		this.questions = dQuestions;
 	}
 
-	public Question getMedoid() {
+	public JavaQuestion getMedoid() {
 		return medoid;
 	}
 
-	public void setMedoid(Question medoid) {
+	public void setMedoid(JavaQuestion medoid) {
 		this.medoid = medoid;
 	}
 
@@ -39,7 +39,7 @@ public class Cluster {
 		return id;
 	}
 
-	public void addQuestion(Question dQuestion) {
+	public void addQuestion(JavaQuestion dQuestion) {
 		if (this.questions != null) {
 			this.questions.add(dQuestion);
 		}
@@ -51,12 +51,7 @@ public class Cluster {
 		}
 	}
 
-	public boolean hasQuestion(Question questionReceived) {
-		for (Question q : this.questions) {
-			if (q.equals(questionReceived)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean hasQuestion(JavaQuestion questionReceived) {
+		return this.questions.contains(questionReceived);
 	}
 }
