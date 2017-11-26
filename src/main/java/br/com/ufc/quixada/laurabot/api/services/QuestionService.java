@@ -13,12 +13,22 @@ public class QuestionService {
 
 	@Autowired
 	private IQuestionRepository questionRepository;
-	
-	public List<Question> findAll() {
+
+	@Autowired
+	private PostsService postsService;
+
+	public List<Question> findByTag(String tag) {
+		List<Long> ids = postsService.findPostsIdByTag(tag);
+		return findByPostsId(ids);
+	}
+
+	@SuppressWarnings("unused")
+	private List<Question> findAll() {
 		return questionRepository.findAll();
 	}
-	
-	public List<Question> findByPostsId(List<Long> postsId) {
+
+	private List<Question> findByPostsId(List<Long> postsId) {
 		return questionRepository.findByPostsId(postsId);
 	}
+
 }
