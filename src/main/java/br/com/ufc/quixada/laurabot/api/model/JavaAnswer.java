@@ -1,7 +1,10 @@
 package br.com.ufc.quixada.laurabot.api.model;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -11,15 +14,20 @@ import javax.persistence.Table;
 public class JavaAnswer {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id",unique=true, nullable = false)
 	private Long id;
 	
 	private String body;
 	
-	@Column(name = "post_id")
 	private Long postId;
 	
 	private Double rankValue;
-
+	
+	@ManyToOne
+	private User user;
+	
 	@ManyToOne
 	private JavaQuestion javaQuestion;
 	
@@ -65,6 +73,14 @@ public class JavaAnswer {
 
 	public void setJavaQuestion(JavaQuestion javaQuestion) {
 		this.javaQuestion = javaQuestion;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

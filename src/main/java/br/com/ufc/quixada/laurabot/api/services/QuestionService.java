@@ -14,21 +14,22 @@ public class QuestionService {
 	@Autowired
 	private IQuestionRepository questionRepository;
 
-	@Autowired
-	private PostsService postsService;
-
-	public List<Question> findByTag(String tag) {
-		List<Long> ids = postsService.findPostsIdByTag(tag);
-		return findByPostsId(ids);
+	public Question findByPostId(Long postId) {
+		return questionRepository.findByPostId(postId);
 	}
+	
+//	public List<Question> findByTag(String tag) {
+//		List<Long> ids = postsService.findPostsIdByTag(tag);
+//		return findByPostsId(ids);
+//	}
 
 	@SuppressWarnings("unused")
 	private List<Question> findAll() {
 		return questionRepository.findAll();
 	}
 
-	private List<Question> findByPostsId(List<Long> postsId) {
-		return questionRepository.findByPostsId(postsId);
-	}
+//	private List<Question> findByPostsId(List<Long> postsId) {
+//		return questionRepository.findByPostsId(postsId);
+//	}
 
 }

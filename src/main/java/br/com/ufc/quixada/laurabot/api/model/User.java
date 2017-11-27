@@ -1,43 +1,55 @@
 package br.com.ufc.quixada.laurabot.api.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
-	
+
 	@Id
 	@Column(name = "id")
-	private int id;
-	
+	private Long id;
+
 	@Column(name = "reputation")
 	private int reputation;
-	
-	@Column(name = "creationDate")
+
+	@Column(name = "creation_date")
 	private Date creationDate;
-	
-	@Column(name = "lastAccessdate")
+
+	@Column(name = "last_access_date")
 	private Date lastAccessdate;
-	
+
 	@Column(name = "views")
 	private int views;
-	
-	@Column(name = "upVotes")
+
+	@Column(name = "up_votes")
 	private int upVotes;
-	
-	@Column(name = "downVotes")
+
+	@Column(name = "down_votes")
 	private int downVotes;
+
+	@OneToMany(mappedBy = "user")
+	private List<Answer> answers;
 	
-	@Column(name = "accountId")
-	private int accountId;
+	@OneToMany(mappedBy = "user")
+	private List<JavaQuestion> javaQuestions;
 	
-	public User () {
-		
+	@OneToMany(mappedBy = "user")
+	private List<JavaAnswer> javaAnswers;
+	
+	public User() {
+
+	}
+
+	public User(Long id) {
+		this.id = id;
 	}
 
 	public int getReputation() {
@@ -88,11 +100,36 @@ public class User {
 		this.downVotes = downVotes;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public int getAccountId() {
-		return accountId;
+	public void setId(Long id) {
+		this.id = id;
 	}
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+
+	public List<JavaQuestion> getJavaQuestions() {
+		return javaQuestions;
+	}
+
+	public void setJavaQuestions(List<JavaQuestion> javaQuestions) {
+		this.javaQuestions = javaQuestions;
+	}
+
+	public List<JavaAnswer> getJavaAnswers() {
+		return javaAnswers;
+	}
+
+	public void setJavaAnswers(List<JavaAnswer> javaAnswers) {
+		this.javaAnswers = javaAnswers;
+	}
+	
 }

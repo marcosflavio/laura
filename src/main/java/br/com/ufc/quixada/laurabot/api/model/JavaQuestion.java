@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -28,8 +29,8 @@ public class JavaQuestion {
 	
 	private String title;
 	
-	@Column(name = "post_id")
-	private Long postId; 
+	@OneToOne
+	private Post post;
 	
 	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
@@ -41,8 +42,14 @@ public class JavaQuestion {
 	@Transient
 	private int clusterId = -1;
 	
+	@OneToOne
+	private JavaAnswer javaAnswer;
+	
 	@OneToMany(mappedBy = "javaQuestion")
 	private List<JavaAnswer> javaAnswers;
+	
+	@ManyToOne
+	private User user;
 	
 	public JavaQuestion() {
 		
@@ -64,12 +71,12 @@ public class JavaQuestion {
 		this.title = title;
 	}
 
-	public Long getPostId() {
-		return postId;
+	public Post getPost() {
+		return post;
 	}
 
-	public void setPostId(Long postId) {
-		this.postId = postId;
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	public Cluster getCluster() {
@@ -104,6 +111,22 @@ public class JavaQuestion {
 		this.javaAnswers = javaAnswers;
 	}
 
+	public JavaAnswer getAcceptedAnswer() {
+		return javaAnswer;
+	}
+
+	public void setAcceptedAnswer(JavaAnswer acceptedAnswer) {
+		this.javaAnswer = acceptedAnswer;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -130,12 +153,6 @@ public class JavaQuestion {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Question [id=" + id + ", title=" + title + ", postId=" + postId + ", cluster=" + cluster + ", isMedoid="
-				+ isMedoid + ", clusterId=" + clusterId + "]";
 	}
 
 }

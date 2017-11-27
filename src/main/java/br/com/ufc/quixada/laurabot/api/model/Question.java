@@ -1,9 +1,11 @@
 package br.com.ufc.quixada.laurabot.api.model;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -19,8 +21,8 @@ public class Question {
 	
 	private String title;
 	
-	@Column(name = "post_id")
-	private Long postId; 
+	@OneToOne
+	private Post post; 
 	
 	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
@@ -52,14 +54,6 @@ public class Question {
 		this.title = title;
 	}
 
-	public Long getPostId() {
-		return postId;
-	}
-
-	public void setPostId(Long postId) {
-		this.postId = postId;
-	}
-
 	public Cluster getCluster() {
 		return cluster;
 	}
@@ -82,6 +76,14 @@ public class Question {
 
 	public void setClusterId(int clusterId) {
 		this.clusterId = clusterId;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	@Override
@@ -107,12 +109,6 @@ public class Question {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Question [id=" + id + ", title=" + title + ", postId=" + postId + ", cluster=" + cluster + ", isMedoid="
-				+ isMedoid + ", clusterId=" + clusterId + "]";
 	}
 
 }
