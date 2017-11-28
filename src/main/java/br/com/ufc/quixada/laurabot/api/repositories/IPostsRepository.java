@@ -15,4 +15,5 @@ public interface IPostsRepository extends JpaRepository<Post, Long>{
 	
 	@Query("SELECT p.Id FROM Post p WHERE p.Tags LIKE CONCAT('%',:tag,'%')")
 	public List<Long> findPostsByTag (@Param("tag") String tag);
+	
 }

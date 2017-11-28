@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -36,7 +37,10 @@ public class Answer {
 	private Long favoriteCount;
 
 	private String tags;
-
+	
+	@OneToOne
+	private Post post;
+	
 	public Long getId() {
 		return id;
 	}
@@ -101,4 +105,12 @@ public class Answer {
 		this.tags = tags;
 	}
 
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
+	}
+	
 }

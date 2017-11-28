@@ -44,6 +44,8 @@ public class AnswerFactory {
 				answer.setFavoriteCount(original.getFavoriteCount());
 				answer.setScore(original.getScore());
 				answer.setTags(original.getTags());
+				answer.setPost(original);
+				
 				
 				Question question = questionService.findByPostId(original.getParentId());
 				answer.setQuestion(question);

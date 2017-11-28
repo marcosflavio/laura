@@ -1,5 +1,7 @@
 package br.com.ufc.quixada.laurabot.api.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,9 @@ public class AnswerService {
 
 	public void save(Answer answer) {
 		iAnswerRepository.save(answer);
+	}
+	
+	public List<Answer> findByQuestionId(Long questionId) {
+		return iAnswerRepository.findByQuestionId(questionId);
 	}
 }

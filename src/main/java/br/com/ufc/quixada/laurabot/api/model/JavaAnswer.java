@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +22,8 @@ public class JavaAnswer {
 	
 	private String body;
 	
-	private Long postId;
+	@OneToOne
+	private Post post;
 	
 	private Double rankValue;
 	
@@ -51,12 +53,12 @@ public class JavaAnswer {
 		this.body = body;
 	}
 
-	public Long getPostId() {
-		return postId;
+	public Post getPost() {
+		return this.post;
 	}
 
-	public void setPostId(Long postId) {
-		this.postId = postId;
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	public Double getRankValue() {

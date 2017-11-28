@@ -17,7 +17,7 @@ public class Cluster {
 	private String name;
 	
 	@OneToMany(mappedBy = "cluster")
-	private List<Question> questions;
+	private List<JavaQuestion> javaQuestions;
 	
 	public Cluster() {
 		
@@ -31,12 +31,12 @@ public class Cluster {
 		this.id = id;
 	}
 
-	public List<Question> getQuestions() {
-		return questions;
+	public List<JavaQuestion> getJavaQuestions() {
+		return javaQuestions;
 	}
 
-	public void setQuestions(List<Question> questions) {
-		this.questions = questions;
+	public void setJavaQuestions(List<JavaQuestion> javaQuestions) {
+		this.javaQuestions = javaQuestions;
 	}
 	
 	public String getName() {

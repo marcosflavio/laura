@@ -18,6 +18,10 @@ public class JavaQuestionService {
 		iJavaQuestionRepository.save(javaQuestion);
 	}
 	
+	public List<JavaQuestion> findByUserIsNotNull() {
+		return iJavaQuestionRepository.findByUserIsNotNull();
+	}
+	
 	public List<JavaQuestion> findAll() {
 		return iJavaQuestionRepository.findAll();
 	}

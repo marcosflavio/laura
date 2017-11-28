@@ -18,6 +18,10 @@ public class QuestionService {
 		return questionRepository.findByPostId(postId);
 	}
 	
+	public List<Question> findByPostsId(List<Long> postIds) {
+		return questionRepository.findByPostIds(postIds);
+	}
+	
 //	public List<Question> findByTag(String tag) {
 //		List<Long> ids = postsService.findPostsIdByTag(tag);
 //		return findByPostsId(ids);
