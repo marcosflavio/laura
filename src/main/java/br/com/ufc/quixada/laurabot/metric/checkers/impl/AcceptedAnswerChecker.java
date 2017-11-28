@@ -11,6 +11,9 @@ public class AcceptedAnswerChecker implements MetricChecker {
 
 	@Override
 	public Double check(JavaQuestion javaQuestion, JavaAnswer javaAnswer) {
-		return null;
+		if(javaQuestion.getAcceptedAnswer().equals(javaAnswer))
+			return 1.0;
+		
+		return 0.0;
 	}
 }

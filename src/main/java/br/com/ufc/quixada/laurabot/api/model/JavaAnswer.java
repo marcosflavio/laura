@@ -1,5 +1,7 @@
 package br.com.ufc.quixada.laurabot.api.model;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,25 +18,33 @@ public class JavaAnswer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id",unique=true, nullable = false)
+	@Basic(optional = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
-	
+
 	private String body;
-	
+
 	@OneToOne
 	private Post post;
-	
+
 	private Double rankValue;
-	
+
+	private Long score;
+
+	private Date creationDate;
+
+	private Long favoriteCount;
+
+	private String tags;
+
 	@ManyToOne
 	private User user;
-	
+
 	@ManyToOne
 	private JavaQuestion javaQuestion;
-	
+
 	public JavaAnswer() {
-		
+
 	}
 
 	public Long getId() {
@@ -84,5 +94,36 @@ public class JavaAnswer {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
+	public Long getScore() {
+		return score;
+	}
+
+	public void setScore(Long score) {
+		this.score = score;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Long getFavoriteCount() {
+		return favoriteCount;
+	}
+
+	public void setFavoriteCount(Long favoriteCount) {
+		this.favoriteCount = favoriteCount;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
 }

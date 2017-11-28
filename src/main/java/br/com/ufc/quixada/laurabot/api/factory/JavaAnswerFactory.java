@@ -20,6 +20,10 @@ public class JavaAnswerFactory {
 		javaAnswer.setBody(answer.getBody());
 		javaAnswer.setPost(answer.getPost());
 		javaAnswer.setUser(answer.getUser());
+		javaAnswer.setCreationDate(answer.getCreationDate());
+		javaAnswer.setFavoriteCount(answer.getFavoriteCount());
+		javaAnswer.setScore(answer.getScore());
+		javaAnswer.setTags(answer.getTags());
 		javaAnswerService.save(javaAnswer);
 	}
 	
