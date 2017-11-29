@@ -13,6 +13,6 @@ public class LaurabotApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-	}
+
+	} 
 }

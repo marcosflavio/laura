@@ -8,8 +8,6 @@ public class LauraAnswerMetric {
 
 	private Double scoreValue;
 
-	private Double favoriteCountValue;
-
 	private Double reputationValue;
 
 	private Double viewsValue;
@@ -48,14 +46,6 @@ public class LauraAnswerMetric {
 
 	public void setScoreValue(Double scoreValue) {
 		this.scoreValue = scoreValue;
-	}
-
-	public Double getFavoriteCountValue() {
-		return favoriteCountValue;
-	}
-
-	public void setFavoriteCountValue(Double favoriteCountValue) {
-		this.favoriteCountValue = favoriteCountValue;
 	}
 
 	public Double getReputationValue() {
@@ -107,7 +97,7 @@ public class LauraAnswerMetric {
 	}
 
 	public Double getRankValue() {
-		return ((2 * acceptedAnswerValue) + (2 + bodyValue) + scoreValue + favoriteCountValue + reputationValue
-				+ viewsValue + upVotesValue + downVotesValue + creationDateValue + answersCountValue) / 12;
+		return (acceptedAnswerValue + (2 * bodyValue) + scoreValue + reputationValue
+				+ viewsValue + upVotesValue + downVotesValue + creationDateValue + answersCountValue) / 11;
 	}
 }
