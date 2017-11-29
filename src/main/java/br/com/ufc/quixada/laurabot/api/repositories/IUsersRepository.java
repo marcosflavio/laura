@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.ufc.quixada.laurabot.api.model.User;
 
-public interface IUsersRepository extends JpaRepository<User, Integer>{
+public interface IUsersRepository extends JpaRepository<User, Long>{
 	
 	
 }

@@ -11,13 +11,14 @@ import br.com.ufc.quixada.laurabot.metric.model.LauraAnswerMetric;
 
 @Component
 public class AnswersCountAnalyzer implements AnswerAnalyzer {
-	
+
 	@Autowired
 	private AnswersCountChecker answersCountChecker;
-	
+
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double answersCountValue = answersCountChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setAnswersCountValue(answersCountValue);
 	}
 
 }

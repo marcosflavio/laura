@@ -21,7 +21,7 @@ public class UsersService {
 		return repository.findAll();
 	}
 
-	public User findOne(int id) {
+	public User findOne(Long id) {
 		return repository.findOne(id);
 	}
 }

@@ -11,13 +11,14 @@ import br.com.ufc.quixada.laurabot.metric.model.LauraAnswerMetric;
 
 @Component
 public class BodyAnalyzer implements AnswerAnalyzer {
-	
+
 	@Autowired
 	private BodyChecker bodyChecker;
-	
+
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double bodyValue = bodyChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setBodyValue(bodyValue);
 	}
 
 }

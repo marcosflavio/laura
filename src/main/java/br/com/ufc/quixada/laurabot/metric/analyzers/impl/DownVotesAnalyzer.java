@@ -17,7 +17,8 @@ public class DownVotesAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double downVotesValue = downVotesChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setDownVotesValue(downVotesValue);
 	}
 
 }

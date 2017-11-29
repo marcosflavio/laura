@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class JavaAnswer {
 	@ManyToOne
 	private User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private JavaQuestion javaQuestion;
 
 	public JavaAnswer() {

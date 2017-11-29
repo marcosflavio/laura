@@ -17,7 +17,8 @@ public class ViewsAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double viewsValue = viewsChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setViewsValue(viewsValue);
 	}
 
 }

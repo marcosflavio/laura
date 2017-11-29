@@ -17,7 +17,8 @@ public class ReputationAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double reputationValue = reputationChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setReputationValue(reputationValue);
 	}
 
 }

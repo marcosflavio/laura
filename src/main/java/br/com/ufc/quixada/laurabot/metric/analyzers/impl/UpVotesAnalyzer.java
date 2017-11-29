@@ -17,7 +17,8 @@ public class UpVotesAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double upVotesValue = upVotesChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setUpVotesValue(upVotesValue);
 	}
 
 }

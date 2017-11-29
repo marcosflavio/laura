@@ -17,7 +17,8 @@ public class CreationDateAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double creationDateValue = creationDateChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setCreationDateValue(creationDateValue);
 	}
 
 }

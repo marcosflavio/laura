@@ -17,7 +17,8 @@ public class ScoreAnalyzer implements AnswerAnalyzer {
 	
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double scoreValue = scoreChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setScoreValue(scoreValue);
 	}
 
 }

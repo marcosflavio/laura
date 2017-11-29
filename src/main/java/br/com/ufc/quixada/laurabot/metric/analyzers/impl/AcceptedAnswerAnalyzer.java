@@ -14,10 +14,11 @@ public class AcceptedAnswerAnalyzer implements AnswerAnalyzer {
 
 	@Autowired
 	private AcceptedAnswerChecker acceptedAnswerChecker;
-	
+
 	@Override
 	public void analyze(JavaQuestion javaQuestion, JavaAnswer javaAnswer, LauraAnswerMetric lauraAnswerMetric) {
-
+		Double acceptedAnswerValue = acceptedAnswerChecker.check(javaQuestion, javaAnswer);
+		lauraAnswerMetric.setAcceptedAnswerValue(acceptedAnswerValue);
 	}
 
 }
