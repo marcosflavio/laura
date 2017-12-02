@@ -56,6 +56,10 @@ public class JavaQuestion {
 		
 	}
 	
+	public JavaQuestion(String title) {
+		this.title = title;
+	}
+	
 	public Long getId() {
 		return id;
 	}
