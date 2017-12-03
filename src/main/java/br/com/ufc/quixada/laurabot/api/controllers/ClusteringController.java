@@ -1,7 +1,5 @@
 package br.com.ufc.quixada.laurabot.api.controllers;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,8 +15,8 @@ public class ClusteringController {
 	private ClusteringService clusteringService;
 	
 	@RequestMapping(value = "/clustering", method = RequestMethod.GET)
-	public Map<Integer, Double> clustering () {
-		return clusteringService.clustering();
+	public void clustering () {
+		clusteringService.clustering();
 	}
 	
 }
